@@ -20,60 +20,24 @@
             min-height: 100vh;
 
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            flex-direction: column;
 
             background: #f5efe6;
-            background-image:
-                radial-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+            background-image: radial-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px);
             background-size: 20px 20px;
 
             font-family: 'Playfair Display', serif;
-            text-align: center;
+
+            padding: 40px 20px;
 
             overflow-x: hidden;
             overflow-y: auto;
-
-            padding: 40px 20px;
-        }
-
-        /* hearts container */
-        #hearts-container {
-
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-
-            pointer-events: none;
-            overflow: hidden;
-            z-index: 999;
-        }
-
-        /* heart style */
-        .heart {
-
-            position: absolute;
-            animation: floatUp linear forwards;
-            opacity: 0.9;
-        }
-
-        @keyframes floatUp {
-
-            0% {
-                transform: translateY(0) scale(0.5);
-                opacity: 1;
-            }
-
-            100% {
-                transform: translateY(-700px) scale(1.5);
-                opacity: 0;
-            }
         }
 
         /* title */
+
         .title {
 
             font-family: 'Dancing Script', cursive;
@@ -83,6 +47,7 @@
         }
 
         /* button */
+
         .reveal-btn {
 
             padding: 12px 28px;
@@ -92,30 +57,23 @@
             color: white;
             font-size: 18px;
             cursor: pointer;
-            transition: .3s;
             margin-bottom: 20px;
         }
 
-        .reveal-btn:hover {
-
-            transform: scale(1.05);
-            background: #6d4c41;
-        }
-
         /* polaroid */
+
         .polaroid {
 
             background: white;
             padding: 15px 15px 40px 15px;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-
-            transform: rotate(-2deg);
-            display: none;
             position: relative;
-            cursor: pointer;
+
+            display: none;
         }
 
         /* tape */
+
         .polaroid::before {
 
             content: "";
@@ -126,28 +84,66 @@
             position: absolute;
             top: -10px;
             left: 50%;
-            transform: translateX(-50%) rotate(2deg);
-            opacity: .8;
+            transform: translateX(-50%);
         }
 
         /* image */
-        .polaroid img {
+
+        .photo {
 
             max-width: 300px;
             width: 100%;
-            display: block;
+            cursor: pointer;
         }
 
-        .polaroid:hover {
+        /* arrows */
 
-            transform: scale(1.05) rotate(-1deg);
+        .arrow {
+
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 30px;
+            background: white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            user-select: none;
         }
 
-        /* animation */
+        .left {
+            left: -20px;
+        }
+
+        .right {
+            right: -20px;
+        }
+
+        /* message */
+
+        .message {
+
+            max-width: 600px;
+            font-size: 18px;
+            color: #5a3e36;
+            margin-top: 20px;
+
+            opacity: 0;
+            transition: 1s;
+        }
+
         .show {
-
             display: block;
-            animation: fadeIn 1s ease;
+            animation: fadeIn 1s;
+        }
+
+        .show-text {
+            opacity: 1;
         }
 
         @keyframes fadeIn {
@@ -161,114 +157,181 @@
                 opacity: 1;
                 transform: scale(1);
             }
+
         }
 
-        /* message */
-        .message {
+        /* hearts */
 
-            max-width: 600px;
-            font-size: 18px;
-            color: #5a3e36;
-            margin: 20px;
-            opacity: 0;
-            transition: 1s;
+        #hearts-container {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
         }
 
-        .show-text {
-
-            opacity: 1;
+        .heart {
+            position: absolute;
+            animation: floatUp linear forwards;
         }
 
-        .download-text {
+        @keyframes floatUp {
 
-            font-size: 14px;
-            margin-top: 8px;
-            color: #8d6e63;
+            0% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(-700px);
+                opacity: 0;
+            }
+
         }
 
-        /* mobile responsive */
-        @media (max-width: 600px) {
+        /* mobile */
+
+        @media(max-width:600px) {
 
             .title {
-
                 font-size: 32px;
             }
 
-            .polaroid img {
-
+            .photo {
                 max-width: 90vw;
-            }
-
-            .message {
-
-                font-size: 16px;
             }
 
         }
     </style>
-
 </head>
 
 <body>
 
-    <!-- hearts -->
     <div id="hearts-container"></div>
 
-    <!-- title -->
     <div class="title">
         Happy 4th Anniversary ❤️
     </div>
 
-    <!-- reveal button -->
     <button class="reveal-btn" onclick="reveal()">
         Click to Reveal Our Memory 🎁
     </button>
 
-    <!-- photo -->
-    <div class="polaroid" id="photoContainer" onclick="downloadPhoto()">
+    <div class="polaroid" id="polaroid">
 
-        <img src="IMG_8692.PNG" id="photo">
+        <div class="arrow left" onclick="prevPhoto()">‹</div>
 
-        <div class="download-text">
-            (Click photo to download)
-        </div>
+        <img src="IMG_8692.PNG" class="photo" id="photo" onclick="downloadPhoto()">
+
+        <div class="arrow right" onclick="nextPhoto()">›</div>
 
     </div>
 
-    <!-- message -->
     <div class="message" id="message">
 
-        Four years ago, you walked into my life and quietly became my forever.
-        Every ordinary moment became special because of you.
-        You are my peace, my happiness, and my home.
-        I Love You Anna ❤️
+        Four years ago, you walked into my life and quietly became my forever. Since then, every ordinary moment feels
+        special, every day feels warmer, and every future dream has you in it. Loving you isn’t just part of my life —
+        it is my life. I Love You Anna! ❤️
 
     </div>
 
-
     <script>
+
+        /* photos list */
+
+        const photos = [
+
+            "IMG_8692.PNG",
+            "IMG_8694.PNG"
+
+        ];
+
+        let currentIndex = 0;
+
+        /* reveal */
 
         function reveal() {
 
             document.querySelector(".reveal-btn").style.display = "none";
 
-            document.getElementById("photoContainer").classList.add("show");
+            document.getElementById("polaroid").classList.add("show");
 
             setTimeout(() => {
-
                 document.getElementById("message").classList.add("show-text");
-
             }, 500);
 
             launchHearts();
+
         }
 
+        /* next photo */
+
+        function nextPhoto() {
+
+            currentIndex++;
+
+            if (currentIndex >= photos.length)
+                currentIndex = 0;
+
+            document.getElementById("photo").src = photos[currentIndex];
+
+        }
+
+        /* previous photo */
+
+        function prevPhoto() {
+
+            currentIndex--;
+
+            if (currentIndex < 0)
+                currentIndex = photos.length - 1;
+
+            document.getElementById("photo").src = photos[currentIndex];
+
+        }
+
+        /* swipe support */
+
+        let startX = 0;
+
+        document.getElementById("photo").addEventListener("touchstart", (e) => {
+
+            startX = e.touches[0].clientX;
+
+        });
+
+        document.getElementById("photo").addEventListener("touchend", (e) => {
+
+            let endX = e.changedTouches[0].clientX;
+
+            if (endX - startX > 50)
+                prevPhoto();
+
+            if (startX - endX > 50)
+                nextPhoto();
+
+        });
+
+        /* download */
+
+        function downloadPhoto() {
+
+            const link = document.createElement("a");
+
+            link.href = photos[currentIndex];
+
+            link.download = "Anniversary_Memory.png";
+
+            link.click();
+
+        }
+
+        /* hearts */
 
         function launchHearts() {
 
             const container = document.getElementById("hearts-container");
 
-            const hearts = ["💖", "💕", "❤️", "💗", "💘"];
+            const hearts = ["❤️", "💖", "💕", "💗"];
 
             for (let i = 0; i < 40; i++) {
 
@@ -276,11 +339,11 @@
 
                 heart.className = "heart";
 
-                heart.innerHTML = hearts[Math.floor(Math.random() * hearts.length)];
+                heart.innerHTML = hearts[Math.floor(Math.random() * 4)];
 
                 heart.style.left = Math.random() * 100 + "vw";
 
-                heart.style.bottom = "0px";
+                heart.style.bottom = "0";
 
                 heart.style.fontSize = (Math.random() * 20 + 20) + "px";
 
@@ -288,30 +351,10 @@
 
                 container.appendChild(heart);
 
-                setTimeout(() => {
+                setTimeout(() => heart.remove(), 4000);
 
-                    heart.remove();
-
-                }, 4000);
             }
-        }
 
-
-        function downloadPhoto() {
-
-            const imageUrl = document.getElementById("photo").src;
-
-            const link = document.createElement("a");
-
-            link.href = imageUrl;
-
-            link.download = "Our_4th_Anniversary_Memory.png";
-
-            document.body.appendChild(link);
-
-            link.click();
-
-            document.body.removeChild(link);
         }
 
     </script>
